@@ -1,0 +1,43 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.example.erychkov.mytestapplication"
+        minSdkVersion 26
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    def supportVersion = '26.1.0'
+    def daggerVersion = '2.12'
+    def butterKnifeVersion = '8.8.1'
+    def robolectricVersion = '3.4.2'
+    def espressoVersion = "3.0.0"
+    def mockitoVersion = "2.12.0"
+    def okhttp3Version = '3.9.0'
+    def retrofitVersion = '2.3.0'
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation "com.jakewharton:butterknife:$butterKnifeVersion"
+    implementation "com.android.support:recyclerview-v7:$supportVersion"
+
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnifeVersion"
+
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
