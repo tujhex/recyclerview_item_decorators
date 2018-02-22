@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="date_item_decor_height">16dp</dimen>
+    <dimen name="image_item_decor_width">28dp</dimen>
+    <dimen name="side_padding">8dp</dimen>
 </resources>

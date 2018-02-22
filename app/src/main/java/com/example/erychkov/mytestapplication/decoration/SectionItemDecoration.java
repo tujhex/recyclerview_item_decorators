@@ -3,8 +3,8 @@ package com.example.erychkov.mytestapplication.decoration;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.support.annotation.DimenRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,62 +14,48 @@ import android.view.ViewGroup;
  * @author erychkov
  * @since 22.02.2018
  */
-@Deprecated
-public class TopSectionItemDecoration extends RecyclerView.ItemDecoration {
 
-    private final Rule mRule;
-    private final int mLayoutRes;
-    private final Context mContext;
-    private final int mLayoutHeight;
+public abstract class SectionItemDecoration extends RecyclerView.ItemDecoration {
 
-    public TopSectionItemDecoration(Context context, @LayoutRes int layoutRes, @DimenRes int layoutHeight, Rule rule) {
+
+    protected final Context mContext;
+    protected final int mLayoutRes;
+    protected final Rule mRule;
+
+    public SectionItemDecoration(Context context, @LayoutRes int layoutRes, Rule rule) {
         mContext = context;
         mLayoutRes = layoutRes;
-        mLayoutHeight = layoutHeight;
         mRule = rule;
     }
 
     @Override
-    public void onDrawOver(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
+    public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
         super.onDrawOver(canvas, parent, state);
-        final int childs = parent.getChildCount();
-        if (childs == 0) {
+        final int childCount = parent.getChildCount();
+        if (childCount == 0) {
             return;
         }
 
-        for (int i = 0; i < childs; i++) {
+        for (int i = 0; i < childCount; i++) {
             View child = parent.getChildAt(i);
             int adapterPosition = parent.getChildAdapterPosition(child);
-            if (adapterPosition == RecyclerView.NO_POSITION){
-                continue;
-            }
-            if (!mRule.isSection(adapterPosition)) {
+            if (adapterPosition == RecyclerView.NO_POSITION || !mRule.isSection(adapterPosition)) {
                 continue;
             }
             canvas.save();
             View view = LayoutInflater.from(mContext).inflate(mLayoutRes, parent, false);
             fixLayoutSize(view, parent);
             mRule.bindData(view, adapterPosition);
-            final int top = child.getTop() - mContext.getResources().getDimensionPixelSize(mLayoutHeight);
-
-            canvas.translate(0, top);
+            calculateSectionSize(canvas, parent, state, adapterPosition, child);
             view.draw(canvas);
             canvas.restore();
         }
     }
 
-    @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        super.getItemOffsets(outRect, view, parent, state);
-
-        int position = parent.getChildAdapterPosition(view);
-        if (mRule.isSection(position)) {
-            outRect.top = mContext.getResources().getDimensionPixelSize(mLayoutHeight);
-        }
-    }
+    protected abstract void calculateSectionSize(Canvas canvas, RecyclerView parent, RecyclerView.State state, int adapterPosition, View item);
 
     //grabbed from here: https://yoda.entelect.co.za/view/9627/how-to-android-recyclerview-item-decorations
-    protected void fixLayoutSize(View view, ViewGroup parent) {
+    protected void fixLayoutSize(View view, @NonNull ViewGroup parent) {
         // Check if the view has a layout parameter and if it does not create one for it
         if (view.getLayoutParams() == null) {
             view.setLayoutParams(new ViewGroup.LayoutParams(
