@@ -6,6 +6,7 @@
     android:textColor="@color/colorPrimary"
     android:background="#ADF"
     android:gravity="center_horizontal"
+    android:layout_marginBottom="16dp"
     android:layout_height="@dimen/date_item_decor_height">
 
 </TextView>

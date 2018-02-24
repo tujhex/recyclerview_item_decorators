@@ -1,16 +1,15 @@
 package com.example.erychkov.mytestapplication;
 
 import com.example.erychkov.mytestapplication.decoration.BaseAdapter;
+import com.example.erychkov.mytestapplication.decoration.LayoutUtils;
 import com.example.erychkov.mytestapplication.decoration.Rule;
 import com.example.erychkov.mytestapplication.decoration.StartVerticalSectionItemDecoration;
 import com.example.erychkov.mytestapplication.decoration.TopHorizontalSectionItemDecoration;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -126,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
         };
-        mRecyclerView.addItemDecoration(new TopHorizontalSectionItemDecoration(this, R.layout.date_item_decor, date, R.dimen.date_item_decor_height));
-        mRecyclerView.addItemDecoration(new StartVerticalSectionItemDecoration(this, R.layout.image_item_decor, image, R.dimen.image_item_decor_width, R.dimen.side_padding));
+        LayoutUtils layoutUtils = new LayoutUtils();
+        mRecyclerView.addItemDecoration(new TopHorizontalSectionItemDecoration(this, R.layout.date_item_decor, date, layoutUtils));
+        mRecyclerView.addItemDecoration(new StartVerticalSectionItemDecoration(this, R.layout.image_item_decor, image, layoutUtils));
     }
 }
