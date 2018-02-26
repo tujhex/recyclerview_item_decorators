@@ -2,15 +2,13 @@ package com.example.erychkov.mytestapplication.decoration;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author erychkov
@@ -21,22 +19,21 @@ public abstract class SectionItemDecoration extends RecyclerView.ItemDecoration 
 
 
     protected final Context mContext;
-    protected final Lock mLock;
     protected final int mLayoutRes;
     protected final Rule mRule;
     protected final LayoutUtils mUtils;
-    private View mView;
+    protected final ItemDecorationManager mManager;
 
-    public SectionItemDecoration(Context context, @LayoutRes int layoutRes, Rule rule, LayoutUtils utils) {
+    public SectionItemDecoration(Context context, @LayoutRes int layoutRes, Rule rule, LayoutUtils utils, ItemDecorationManager manager) {
         mContext = context;
         mLayoutRes = layoutRes;
         mRule = rule;
         mUtils = utils;
-        mLock = new ReentrantLock();
+        mManager = manager;
     }
 
     @Override
-    public void onDrawOver(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
+    public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
         super.onDrawOver(canvas, parent, state);
         final int childCount = parent.getChildCount();
         if (childCount == 0) {
@@ -49,22 +46,32 @@ public abstract class SectionItemDecoration extends RecyclerView.ItemDecoration 
             if (adapterPosition == RecyclerView.NO_POSITION || !mRule.isSection(adapterPosition)) {
                 continue;
             }
+            View section = getView(parent);
+            bindData(section, parent, adapterPosition);
+            Rect outBounds = getSectionRect(child, parent, state);
+            Rect decoratedBounds = new Rect();
+            parent.getDecoratedBoundsWithMargins(child, decoratedBounds);
             canvas.save();
-            View section = getView(parent, adapterPosition);
-            calculateSectionSize(canvas, parent, state, adapterPosition, child, section);
+            canvas.translate(getCanvasOffsetX(section, child, outBounds, decoratedBounds), getCanvasOffsetY(section, child, outBounds, decoratedBounds));
             section.draw(canvas);
             canvas.restore();
         }
     }
 
-    protected abstract void calculateSectionSize(Canvas canvas, RecyclerView parent, RecyclerView.State state, int adapterPosition, View childItem, View section);
+    protected void bindData(View view, ViewGroup parent, int position) {
+        fixLayoutSize(view, parent);
+        mRule.bindData(view, position);
+    }
+
+    protected abstract int getCanvasOffsetX(View section, View child, Rect sectionBounds, Rect decoratedBounds);
+
+    protected abstract int getCanvasOffsetY(View section, View child, Rect sectionBounds, Rect decoratedBounds);
 
     //grabbed from here: https://yoda.entelect.co.za/view/9627/how-to-android-recyclerview-item-decorations
     protected void fixLayoutSize(View view, @NonNull ViewGroup parent) {
         // Check if the view has a layout parameter and if it does not create one for it
         if (view.getLayoutParams() == null) {
-            view.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
         // Create a width and height spec using the parent as an example:
@@ -76,10 +83,8 @@ public abstract class SectionItemDecoration extends RecyclerView.ItemDecoration 
         int heightSpec = View.MeasureSpec.makeMeasureSpec(parent.getHeight(), View.MeasureSpec.UNSPECIFIED);
 
         // Get the child specs using the parent spec and the padding the parent has
-        int childWidth = ViewGroup.getChildMeasureSpec(widthSpec,
-            parent.getPaddingLeft() + parent.getPaddingRight(), view.getLayoutParams().width);
-        int childHeight = ViewGroup.getChildMeasureSpec(heightSpec,
-            parent.getPaddingTop() + parent.getPaddingBottom(), view.getLayoutParams().height);
+        int childWidth = ViewGroup.getChildMeasureSpec(widthSpec, parent.getPaddingLeft() + parent.getPaddingRight(), view.getLayoutParams().width);
+        int childHeight = ViewGroup.getChildMeasureSpec(heightSpec, parent.getPaddingTop() + parent.getPaddingBottom(), view.getLayoutParams().height);
 
         // Finally we measure the sizes with the actual view which does margin and padding changes to the sizes calculated
         view.measure(childWidth, childHeight);
@@ -88,18 +93,27 @@ public abstract class SectionItemDecoration extends RecyclerView.ItemDecoration 
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
     }
 
-    protected View getView(ViewGroup parent, int adapterPosition) {
-        mLock.lock();
-        try {
-            if (mView == null) {
-                mView = LayoutInflater.from(mContext).inflate(mLayoutRes, parent, false);
-                fixLayoutSize(mView, parent);
+
+    protected Rect getSectionRect(View child, RecyclerView parent, RecyclerView.State state) {
+        Rect bounds = new Rect();
+        Rect temp = new Rect();
+        for (int i = mManager.getCount() - 1; i > 0; i--) {
+            temp.set(0, 0, 0, 0);
+            RecyclerView.ItemDecoration decoration = mManager.get(i);
+            if (decoration == this) {
+                break;
+
             }
-            mRule.bindData(mView, adapterPosition);
-            fixLayoutSize(mView, parent);
-            return mView;
-        } finally {
-            mLock.unlock();
+            decoration.getItemOffsets(temp, child, parent, state);
+            bounds.left += temp.left;
+            bounds.right += temp.right;
+            bounds.bottom += temp.bottom;
+            bounds.top += temp.top;
         }
+        return bounds;
+    }
+
+    protected View getView(ViewGroup parent) {
+        return LayoutInflater.from(mContext).inflate(mLayoutRes, parent, false);
     }
 }

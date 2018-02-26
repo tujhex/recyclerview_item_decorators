@@ -1,6 +1,7 @@
 package com.example.erychkov.mytestapplication;
 
 import com.example.erychkov.mytestapplication.decoration.BaseAdapter;
+import com.example.erychkov.mytestapplication.decoration.ItemDecorationManager;
 import com.example.erychkov.mytestapplication.decoration.LayoutUtils;
 import com.example.erychkov.mytestapplication.decoration.Rule;
 import com.example.erychkov.mytestapplication.decoration.StartVerticalSectionItemDecoration;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM");
         String dateStart;
         dateStart = "11/03/14 09:29:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "1", "text qw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwd", format.parse(dateStart), false, false));
+        uiModels.add(new CommentAdapterUiModelImpl("", "1", "text qw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwd", format.parse(dateStart), false, false));
         dateStart = "11/03/14 09:31:58";
         uiModels.add(new CommentAdapterUiModelImpl("", "1", "text1", format.parse(dateStart), false, false));
         dateStart = "11/03/14 09:34:58";
@@ -108,18 +109,18 @@ public class MainActivity extends AppCompatActivity {
                 if (imageView != null) {
                     imageView.setBackgroundColor(getResources().getColor(R.color.test));
 
-                    int width = imageView.getWidth();
-                    int height = imageView.getHeight();
+                    int width = 160;
+                    int height = 160;
 
                     Bitmap newImage = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
                     Canvas c = new Canvas(newImage);
-                    c.drawARGB(0xff, 0xDE,0xDF,0xAE);
+                    c.drawARGB(0xff, 0xDE, 0xDF, 0xAE);
                     Paint paint = new Paint();
                     paint.setColor(Color.RED);
                     paint.setStyle(Paint.Style.FILL);
                     paint.setTextSize(40);
-                    c.drawText(uiModels.get(position).getAuthor(), width/2, height/2, paint);
+                    c.drawText(uiModels.get(position).getAuthor(), width / 2, height / 2, paint);
 
                     imageView.setImageBitmap(newImage);
                 }
@@ -128,10 +129,10 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-        final Rule name = new Rule() {
+        final Rule author = new Rule() {
             @Override
             public boolean isSection(int position) {
-               return image.isSection(position);
+                return image.isSection(position);
             }
 
             @Override
@@ -141,11 +142,11 @@ public class MainActivity extends AppCompatActivity {
                     textView.setText(uiModels.get(position).getAuthor());
                 }
             }
-
         };
         LayoutUtils layoutUtils = new LayoutUtils();
-        mRecyclerView.addItemDecoration(new TopHorizontalSectionItemDecoration(this, R.layout.date_item_decor, name, layoutUtils));
-//        mRecyclerView.addItemDecoration(new TopHorizontalSectionItemDecoration(this, R.layout.date_item_decor, date, layoutUtils));
-        mRecyclerView.addItemDecoration(new StartVerticalSectionItemDecoration(this, R.layout.image_item_decor, image, layoutUtils));
+        ItemDecorationManager manager = new ItemDecorationManager();
+        manager.addItemDecoration(mRecyclerView, new StartVerticalSectionItemDecoration(this, R.layout.image_item_decor, image, layoutUtils, manager));
+        manager.addItemDecoration(mRecyclerView, new TopHorizontalSectionItemDecoration(this, R.layout.date_item_decor, date, layoutUtils, manager));
+        manager.addItemDecoration(mRecyclerView, new TopHorizontalSectionItemDecoration(this, R.layout.author_item_decor, author, layoutUtils, manager));
     }
 }
