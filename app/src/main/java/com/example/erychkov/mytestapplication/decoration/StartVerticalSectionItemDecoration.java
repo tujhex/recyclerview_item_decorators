@@ -21,7 +21,8 @@ public class StartVerticalSectionItemDecoration extends SectionItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        View section = getView(parent);
+        int position = parent.getChildAdapterPosition(view);
+        View section = getView(parent, position);
         outRect.left = section.getMeasuredWidth() + mUtils.getLayoutIndentEnd(section) + mUtils.getLayoutIndentStart(section);
     }
 

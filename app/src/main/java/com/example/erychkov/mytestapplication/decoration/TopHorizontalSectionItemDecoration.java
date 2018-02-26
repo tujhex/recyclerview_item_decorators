@@ -22,8 +22,9 @@ public class TopHorizontalSectionItemDecoration extends SectionItemDecoration {
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
         int position = parent.getChildAdapterPosition(view);
-        if (mRule.isSection(position)) {
-            View section = getView(parent);
+        if (mRule.isSection(position) && position != RecyclerView.NO_POSITION) {
+            View section = getView(parent, position);
+            fixLayoutSize(section, parent);
             outRect.top = section.getMeasuredHeight() + mUtils.getLayoutIndentTop(section) + mUtils.getLayoutIndentBottom(section);
         }
     }

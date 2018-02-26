@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/MyTestApplication.iml" filepath="$PROJECT_DIR$/MyTestApplication.iml" />
       <module fileurl="file://W:\projects\recyclerview_item_decorators\MyTestApplication.iml" filepath="W:\projects\recyclerview_item_decorators\MyTestApplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://W:\projects\recyclerview_item_decorators\app\app.iml" filepath="W:\projects\recyclerview_item_decorators\app\app.iml" />

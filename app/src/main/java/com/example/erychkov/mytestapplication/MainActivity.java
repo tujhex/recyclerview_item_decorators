@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         dateStart = "11/03/17 09:29:58";
         uiModels.add(new CommentAdapterUiModelImpl("", "1", "text9", format.parse(dateStart), false, false));
         dateStart = "11/03/17 19:29:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "1", "text10", format.parse(dateStart), false, false));
+        uiModels.add(new CommentAdapterUiModelImpl("", "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", "text10", format.parse(dateStart), false, false));
 
         BaseAdapter adapter = new BaseAdapter();
         adapter.setData(uiModels);
@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         };
+
 
         final Rule image = new Rule() {
             @Override
@@ -125,8 +126,26 @@ public class MainActivity extends AppCompatActivity {
             }
 
         };
+
+
+        final Rule name = new Rule() {
+            @Override
+            public boolean isSection(int position) {
+               return image.isSection(position);
+            }
+
+            @Override
+            public void bindData(View view, int position) {
+                TextView textView = view.findViewById(R.id.header);
+                if (textView != null) {
+                    textView.setText(uiModels.get(position).getAuthor());
+                }
+            }
+
+        };
         LayoutUtils layoutUtils = new LayoutUtils();
-        mRecyclerView.addItemDecoration(new TopHorizontalSectionItemDecoration(this, R.layout.date_item_decor, date, layoutUtils));
+        mRecyclerView.addItemDecoration(new TopHorizontalSectionItemDecoration(this, R.layout.date_item_decor, name, layoutUtils));
+//        mRecyclerView.addItemDecoration(new TopHorizontalSectionItemDecoration(this, R.layout.date_item_decor, date, layoutUtils));
         mRecyclerView.addItemDecoration(new StartVerticalSectionItemDecoration(this, R.layout.image_item_decor, image, layoutUtils));
     }
 }

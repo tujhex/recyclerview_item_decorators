@@ -50,9 +50,7 @@ public abstract class SectionItemDecoration extends RecyclerView.ItemDecoration 
                 continue;
             }
             canvas.save();
-            View section = getView(parent);
-            mRule.bindData(section, adapterPosition);
-            fixLayoutSize(mView, parent);
+            View section = getView(parent, adapterPosition);
             calculateSectionSize(canvas, parent, state, adapterPosition, child, section);
             section.draw(canvas);
             canvas.restore();
@@ -66,7 +64,7 @@ public abstract class SectionItemDecoration extends RecyclerView.ItemDecoration 
         // Check if the view has a layout parameter and if it does not create one for it
         if (view.getLayoutParams() == null) {
             view.setLayoutParams(new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
         // Create a width and height spec using the parent as an example:
@@ -79,9 +77,9 @@ public abstract class SectionItemDecoration extends RecyclerView.ItemDecoration 
 
         // Get the child specs using the parent spec and the padding the parent has
         int childWidth = ViewGroup.getChildMeasureSpec(widthSpec,
-                parent.getPaddingLeft() + parent.getPaddingRight(), view.getLayoutParams().width);
+            parent.getPaddingLeft() + parent.getPaddingRight(), view.getLayoutParams().width);
         int childHeight = ViewGroup.getChildMeasureSpec(heightSpec,
-                parent.getPaddingTop() + parent.getPaddingBottom(), view.getLayoutParams().height);
+            parent.getPaddingTop() + parent.getPaddingBottom(), view.getLayoutParams().height);
 
         // Finally we measure the sizes with the actual view which does margin and padding changes to the sizes calculated
         view.measure(childWidth, childHeight);
@@ -90,13 +88,15 @@ public abstract class SectionItemDecoration extends RecyclerView.ItemDecoration 
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
     }
 
-    protected View getView(ViewGroup parent) {
+    protected View getView(ViewGroup parent, int adapterPosition) {
         mLock.lock();
         try {
             if (mView == null) {
                 mView = LayoutInflater.from(mContext).inflate(mLayoutRes, parent, false);
                 fixLayoutSize(mView, parent);
             }
+            mRule.bindData(mView, adapterPosition);
+            fixLayoutSize(mView, parent);
             return mView;
         } finally {
             mLock.unlock();
