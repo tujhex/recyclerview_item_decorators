@@ -4,8 +4,8 @@ import com.example.erychkov.mytestapplication.decoration.BaseAdapter;
 import com.example.erychkov.mytestapplication.decoration.ItemDecorationManager;
 import com.example.erychkov.mytestapplication.decoration.LayoutUtils;
 import com.example.erychkov.mytestapplication.decoration.Rule;
-import com.example.erychkov.mytestapplication.decoration.StartVerticalSectionItemDecoration;
-import com.example.erychkov.mytestapplication.decoration.TopHorizontalSectionItemDecoration;
+import com.example.erychkov.mytestapplication.decoration.StartItemDecoration;
+import com.example.erychkov.mytestapplication.decoration.TopItemDecoration;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,6 +14,7 @@ import android.graphics.Paint;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         try {
             bindRV();
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -51,27 +52,27 @@ public class MainActivity extends AppCompatActivity {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM");
         String dateStart;
         dateStart = "11/03/14 09:29:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "1", "text qw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwd", format.parse(dateStart), false, false));
+        uiModels.add(new CommentAdapterUiModelImpl("", "author1", "text qw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwdqw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwd", format.parse(dateStart), false, false));
         dateStart = "11/03/14 09:31:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "1", "text1", format.parse(dateStart), false, false));
+        uiModels.add(new CommentAdapterUiModelImpl("", "author1", "text1", format.parse(dateStart), false, false));
         dateStart = "11/03/14 09:34:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "2", "text2", format.parse(dateStart), false, false));
+        uiModels.add(new CommentAdapterUiModelImpl("", "author2", "text2", format.parse(dateStart), false, false));
         dateStart = "11/03/14 09:35:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "1", "text3", format.parse(dateStart), false, false));
+        uiModels.add(new CommentAdapterUiModelImpl("", "author1", "text3", format.parse(dateStart), false, false));
         dateStart = "11/03/14 09:40:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "4", "text4", format.parse(dateStart), false, true));
+        uiModels.add(new CommentAdapterUiModelImpl("", "author4", "text4", format.parse(dateStart), false, true));
         dateStart = "11/03/15 09:29:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "4", "text5  qw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwd", format.parse(dateStart), false, true));
+        uiModels.add(new CommentAdapterUiModelImpl("", "author4", "text5  qw dqwdq wdqwd qwdqw dqw dqwdq wdq wdq wdqwdqw dqwd qdqw dqwd qwd", format.parse(dateStart), false, true));
         dateStart = "11/03/15 09:35:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "4", "text6", format.parse(dateStart), false, true));
+        uiModels.add(new CommentAdapterUiModelImpl("", "author4", "text6", format.parse(dateStart), false, true));
         dateStart = "11/03/16 09:43:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "1", "text7", format.parse(dateStart), false, false));
+        uiModels.add(new CommentAdapterUiModelImpl("", "author1", "text7", format.parse(dateStart), false, false));
         dateStart = "11/03/16 09:45:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "1", "text8", format.parse(dateStart), false, false));
+        uiModels.add(new CommentAdapterUiModelImpl("", "author1", "text8", format.parse(dateStart), false, false));
         dateStart = "11/03/17 09:29:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "1", "text9", format.parse(dateStart), false, false));
+        uiModels.add(new CommentAdapterUiModelImpl("", "author1", "text9", format.parse(dateStart), false, false));
         dateStart = "11/03/17 19:29:58";
-        uiModels.add(new CommentAdapterUiModelImpl("", "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", "text10", format.parse(dateStart), false, false));
+        uiModels.add(new CommentAdapterUiModelImpl("", "author1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", "text10", format.parse(dateStart), false, false));
 
         BaseAdapter adapter = new BaseAdapter();
         adapter.setData(uiModels);
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                     paint.setColor(Color.RED);
                     paint.setStyle(Paint.Style.FILL);
                     paint.setTextSize(40);
-                    c.drawText(uiModels.get(position).getAuthor(), width / 2, height / 2, paint);
+                    c.drawText(uiModels.get(position).getAuthor(), 0, height / 2, paint);
 
                     imageView.setImageBitmap(newImage);
                 }
@@ -145,8 +146,9 @@ public class MainActivity extends AppCompatActivity {
         };
         LayoutUtils layoutUtils = new LayoutUtils();
         ItemDecorationManager manager = new ItemDecorationManager();
-        manager.addItemDecoration(mRecyclerView, new StartVerticalSectionItemDecoration(this, R.layout.image_item_decor, image, layoutUtils, manager));
-        manager.addItemDecoration(mRecyclerView, new TopHorizontalSectionItemDecoration(this, R.layout.date_item_decor, date, layoutUtils, manager));
-        manager.addItemDecoration(mRecyclerView, new TopHorizontalSectionItemDecoration(this, R.layout.author_item_decor, author, layoutUtils, manager));
+        mRecyclerView.addItemDecoration(manager);
+        manager.addItemDecoration(new TopItemDecoration(this, R.layout.author_item_decor, author, layoutUtils, mRecyclerView));
+        manager.addItemDecoration(new TopItemDecoration(this, R.layout.date_item_decor, date, layoutUtils, mRecyclerView));
+        manager.addItemDecoration(new StartItemDecoration(this, R.layout.image_item_decor, image, layoutUtils, mRecyclerView));
     }
 }
